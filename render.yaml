@@ -27,4 +27,4 @@ services:
 databases:
   - name: karis-medical-db
     region: frankfurt
-    plan: 0.1c-256mb
+    plan: free
