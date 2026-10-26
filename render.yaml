@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: karis-website
+    runtime: python
+    region: frankfurt
+    plan: 0.5c-512mb
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
+    preDeployCommand: python manage.py migrate
+    startCommand: gunicorn karis_site.wsgi:application --bind 0.0.0.0:$PORT
+    healthCheckPath: /
+    envVars:
+      - key: DJANGO_DEBUG
+        value: "false"
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: karis-medical-db
+          property: connectionString
+      - key: APPOINTMENTS_ENABLED
+        value: "false"
+      - key: APPOINTMENT_PRIVACY_APPROVED
+        value: "false"
+      - key: APPOINTMENT_RETENTION_DAYS
+        value: "90"
+
+databases:
+  - name: karis-medical-db
+    region: frankfurt
+    plan: 0.1c-256mb

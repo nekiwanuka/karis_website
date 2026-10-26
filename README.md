@@ -35,6 +35,16 @@ About-page medical-team roles and the upcoming-projects subsection link to dedic
 
 The original Karis design uses sky-blue surfaces, serif display headings, patient shortcuts, a full-width Home slideshow, and contextual photography across About, Services, Patient Information, Contact, and Appointments. Supplied photos are not labeled as named staff or specific branch premises without verification. The mobile navigation supports keyboard dismissal; navigation remains visible if JavaScript is unavailable. Light, dark, and system themes are supported, and the slideshow pauses for reduced-motion preferences. Increment the asset version in the base template when publishing updated styles or theme/navigation scripts.
 
+## Render deployment
+
+The root `render.yaml` Blueprint creates a Python web service and a persistent PostgreSQL database in Frankfurt. It uses Gunicorn, WhiteNoise, and runs database migrations before each deploy. The selected web and database plans are paid; review Render pricing before applying the Blueprint. Do not switch the database to Render's free plan for clinic use: it expires after 30 days and does not include backups.
+
+In Render, create a new Blueprint and select this GitHub repository. Render generates `DJANGO_SECRET_KEY` and connects `DATABASE_URL` to the database. After the first deploy, use the web service Shell to run `python manage.py createsuperuser`.
+
+Online appointments are disabled by default. Before enabling them, the clinic must review and approve the privacy notice, configure working SMTP settings (`EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_USE_TLS`, `EMAIL_HOST_USER`, and `EMAIL_HOST_PASSWORD`), and set `APPOINTMENT_PRIVACY_APPROVED=true` and `APPOINTMENTS_ENABLED=true`. Keep appointment collection disabled until that review and configuration are complete. Configure a scheduled task to run `python manage.py purge_expired_appointments` regularly, and confirm backups and retention requirements for the clinic's records.
+
+For a custom domain, add its hostname to `DJANGO_ALLOWED_HOSTS` and its HTTPS origin to `DJANGO_CSRF_TRUSTED_ORIGINS`. Do not store secrets in this repository.
+
 ## cPanel deployment
 
 The workspace plan does not confirm the cPanel account's Python, Django, WSGI/Passenger, or database support. Verify those capabilities with the host before deployment. If supported, configure a Python 3.12 application with the project root, `passenger_wsgi.py`, and WSGI callable `application`; install `requirements.txt` in the host-managed virtual environment, run `python manage.py migrate`, and run `python manage.py collectstatic --noinput`.

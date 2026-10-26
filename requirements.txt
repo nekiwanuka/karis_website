@@ -1,4 +1,8 @@
 Django>=5.2,<5.3
+dj-database-url>=2.3,<3
+gunicorn>=23,<24
+psycopg2-binary>=2.9,<3
 python-dotenv>=1,<2
 pytest>=8,<9
 pytest-django>=4.11,<5
+whitenoise[brotli]>=6.9,<7
