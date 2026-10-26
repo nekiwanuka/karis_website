@@ -8,7 +8,10 @@ from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / ".env", override=True)
 
-DEBUG = os.environ.get("DJANGO_DEBUG", "true").lower() in {"1", "true", "yes"}
+RENDER_ENVIRONMENT = os.environ.get("RENDER", "").lower() in {"1", "true", "yes"}
+DEBUG = os.environ.get(
+    "DJANGO_DEBUG", "false" if RENDER_ENVIRONMENT else "true"
+).lower() in {"1", "true", "yes"}
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 if not SECRET_KEY:
     if not DEBUG:
