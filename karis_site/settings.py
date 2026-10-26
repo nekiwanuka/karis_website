@@ -159,7 +159,8 @@ EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND", "").strip() or (
     else "django.core.mail.backends.console.EmailBackend"
 )
 APPOINTMENT_PRIVACY_APPROVED = (
-    os.environ.get("APPOINTMENT_PRIVACY_APPROVED") or "true"
+    os.environ.get("APPOINTMENT_PRIVACY_APPROVED")
+    or ("false" if RENDER_ENVIRONMENT else "true")
 ).lower() in {"1", "true", "yes"}
 
 try:
@@ -170,7 +171,11 @@ except ValueError:
     APPOINTMENT_RETENTION_DAYS = 90
 
 APPOINTMENTS_ENABLED = (
-    (os.environ.get("APPOINTMENTS_ENABLED") or "true").lower() in {"1", "true", "yes"}
+    (
+        os.environ.get("APPOINTMENTS_ENABLED")
+        or ("false" if RENDER_ENVIRONMENT else "true")
+    ).lower()
+    in {"1", "true", "yes"}
     and APPOINTMENT_PRIVACY_APPROVED
     and APPOINTMENT_RETENTION_DAYS > 0
 )
