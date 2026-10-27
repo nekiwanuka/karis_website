@@ -3,9 +3,8 @@ services:
     name: karis-website
     runtime: python
     region: frankfurt
-    plan: 0.5c-512mb
-    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
-    preDeployCommand: python manage.py migrate
+    plan: free
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate
     startCommand: gunicorn karis_site.wsgi:application --bind 0.0.0.0:$PORT
     healthCheckPath: /
     envVars:
