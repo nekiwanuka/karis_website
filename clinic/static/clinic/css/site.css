@@ -942,6 +942,7 @@ h1, h2, h3 { text-wrap: balance; }
     position: relative;
     display: flex;
     width: 100vw;
+    max-width: none;
     min-height: 530px;
     align-items: center;
     margin: 0 calc(50% - 50vw) 28px;
